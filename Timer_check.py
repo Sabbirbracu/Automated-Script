@@ -43,7 +43,7 @@ def click_confirm_button(driver):
 
 # Function to wait for a given number of seconds with a countdown display
 def wait_with_countdown(seconds):
-    log(f"Waiting for {seconds // 60} minutes before next iteration")
+    log(f"Waiting for {seconds // 60} minutes and {seconds % 60} seconds before next iteration")
     while seconds:
         mins, secs = divmod(seconds, 60)
         countdown = f"{mins:02d}:{secs:02d}"
@@ -95,7 +95,6 @@ def get_countdown_seconds(driver):
         log(f"An error occurred while retrieving countdown timer: {e}")
         return None
 
-
 # Function to start the betting process
 def start_betting(driver):
     try:
@@ -138,14 +137,13 @@ def start_betting(driver):
         )
         vip1_room.click()
 
-
         # Refresh the page before checking the countdown and take 3 sec sleep.
-        log("Refreshing the page")
-        driver.refresh()
-        time.sleep(3)
-
+        
+        # driver.refresh()
+        # time.sleep(3)
 
         while True:
+            log("Refreshing the page")
             driver.refresh()
             time.sleep(5)
             # Wait until the countdown timer shows 4 minutes
@@ -155,18 +153,15 @@ def start_betting(driver):
             while countdown_minutes is not None and countdown_minutes != 4:
                 log(f"Current countdown minute is {countdown_minutes}, {countdown_seconds} waiting for it to reach 4")
                 if countdown_minutes > 4:
-                    # wait_time = (countdown_minutes - 4) * 60 + countdown_seconds  # Wait time calculation
                     wait_time = countdown_seconds
                     log(f"Sleeping for {wait_time // 60} minutes and {wait_time % 60} seconds")
                     wait_with_countdown(wait_time)
                 elif countdown_minutes < 4:
-                    # wait_time = (5 - countdown_minutes) * 60 + 57 + 38  # Wait time calculation
                     wait_time = (countdown_minutes * 60) + countdown_seconds + 57
                     log(f"Sleeping for {wait_time // 60} minutes and {wait_time % 60} seconds")
                     wait_with_countdown(wait_time)
 
                 countdown_minutes = get_countdown_minutes(driver)
-
 
             log("Starting a new betting iteration")
 
@@ -243,16 +238,12 @@ def start_betting(driver):
                 log(f"An error occurred while betting SMALL: {e}")
 
             log('-------------------------')
-            # # Wait for 6 minutes before the next iteration with countdown
-            # wait_with_countdown(360)
-
             # After completing betting, check the current time and wait current time + 57 seconds
             log("Checking countdown timer after betting")
             countdown_minutes = get_countdown_minutes(driver)
             countdown_seconds = get_countdown_seconds(driver)
             if countdown_minutes is not None:
-                # wait_time = (5 - countdown_minutes) * 60 + 57 + 38  # Calculation for waiting till 4 minutes
-                wait_time = countdown_minutes*60 + countdown_seconds +57
+                wait_time = countdown_minutes * 60 + countdown_seconds + 57
                 log(f"Sleeping for {wait_time // 60} minutes and {wait_time % 60} seconds")
                 wait_with_countdown(wait_time)
 
