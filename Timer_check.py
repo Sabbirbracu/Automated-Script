@@ -47,10 +47,11 @@ def wait_with_countdown(seconds):
     while seconds:
         mins, secs = divmod(seconds, 60)
         countdown = f"{mins:02d}:{secs:02d}"
-        print(countdown, end='\r')
+        # print(countdown, end='\r')
+        print(countdown, end='', flush=True)
         time.sleep(1)
         seconds -= 1
-    print(" " * len(countdown), end='\r')  # Clear the line after countdown is complete
+    print(" " * len(countdown), end='\n')  # Clear the line after countdown is complete
 
 # Function to handle the confirmation popup after logging in
 def handle_confirmation(driver):
